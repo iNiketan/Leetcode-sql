@@ -1,0 +1,53 @@
+# 1 
+select employee_id, concat(first_name, " ", last_name) as full_name, salary
+from employees
+where manager_id in (
+    select employee_id from employees
+    where first_name = 'Adam'
+    );
+    
+    
+# 2 Q10. Department name
+select employee_id, concat(first_name, " ", last_name) as full_name, salary
+from employees
+where department_id in (
+    select department_id from departments
+    where department_name in ('Administration', 'Marketing', 'Human Resources')
+);
+
+also can be done as
+select employee_id, concat(first_name, " ", last_name) as full_name, salary
+from employees as e
+left join departments as d
+on e.department_id = d.department_id
+where department_name in ('Administration', 'Marketing', 'Human Resources');
+
+
+#3 multiple subquery Q11. Seattle
+SELECT first_name, last_name, employee_id, job_id
+from employees
+where department_id in (
+    select department_id
+    from departments
+    where location_id = (
+        select location_id from locations
+        where city = 'Seattle'
+    )
+);
+
+
+#4 Q3. Europe
+select employees.employee_id, concat(employees.first_name, " ", employees.last_name) as full_name,
+employees.salary, employees.phone_number, employees.department_id, departments.department_name,
+locations.street_address, locations.city, countries.country_name, countries.region_id, regions.region_name
+from employees
+left join departments
+on employees.department_id = departments.department_id
+left join locations
+on departments.location_id = locations.location_id
+left join countries
+on locations.country_id = countries.country_id
+left join regions
+on countries.region_id = regions.region_id
+where regions.region_name = 'Europe'
+order by employees.salary desc, employees.employee_id asc;
