@@ -1,0 +1,38 @@
+Write a Query to find the first day of the first job of every employee and return it as 'first_day_job'.
+
+    Return the columns 'first_name', 'first_day_job'.
+
+
+/* YOUR QUERY GOES HERE
+   Example: SELECT * FROM EMPLOYEE; 
+*/
+
+
+select e.first_name, min(d.start_date) as first_day_job
+from employees as e
+left join job_history as d
+on e.employee_id = d.employee_id
+where d.start_date is not null
+group by e.first_name
+order by e.first_name asc;
+
+
+        or
+select first_name, first_day_job
+from (
+    select e.first_name, d.start_date as first_day_job,
+    rank() over(partition by e.first_name order by d.start_date asc) as first_day_job_rank
+    from employees as e
+    join job_history as d
+    on e.employee_id = d.employee_id
+) as es
+where es.first_day_job_rank = 1;
+
+
+
+
+
+
+
+
+
