@@ -1,0 +1,20 @@
+select employee_id, first_name, job_id
+from (
+    select t.*,
+    dense_rank() over(partition by t.job_id order by t.salary desc) as js
+    from employees as t
+) as ts
+where ts.js = 5;
+
+############
+select employee_id, first_name, job_id
+from (
+    select t.*,
+    dense_rank() over(partition by t.job_id order by t.salary desc) as js
+    from employees as t
+    where js = 5
+);
+
+
+
+
